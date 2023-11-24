@@ -1,2 +1,1 @@
-# Implementatating a JavaFX Application with MVVM pattern adapting Command and Mediator for allowing Communication between ModelViews
-
+# A javaFX application to Test MVVM, Command and Mediator all together
