@@ -1,7 +1,6 @@
 package org.PlayingMVVM;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,7 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.Node;
-import javafx.util.converter.NumberStringConverter;
 
 public class EmploymentRequestView extends VBox {
     
@@ -76,7 +74,9 @@ public class EmploymentRequestView extends VBox {
         VBox.setVgrow( gpwrap, Priority.ALWAYS );
 
         //btnSave.setOnAction( this::save );
-        btnAdd.setOnAction(event -> createCircle(event, circleList));
+        btnAdd.setOnAction(event -> {createCircle(event, circleList);
+                                    Label l = new Label("ola");
+                                    gp.add(l, 0, 2);});
         btnCancel.setOnAction( this::cancel );
         btnReset.setOnAction( event -> reset(event, circleList));
 

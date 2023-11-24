@@ -12,8 +12,6 @@ public class EmploymentRequestViewModel {
     private final StringProperty name = new SimpleStringProperty("");
     private final StringProperty position = new SimpleStringProperty("");
     private final DoubleProperty annualSalary = new SimpleDoubleProperty();
-    private final EmploymentRequestConverter converter =
-            new EmploymentRequestConverter();
 
     private final EmploymentRequestModel model = new EmploymentRequestModel();
 
@@ -54,8 +52,7 @@ public class EmploymentRequestViewModel {
     }
 
     public void save() {
-        EmploymentRequest data = converter.toEmploymentRequest( this );
-        model.save( data );
+        model.save();
     }
 
     public void reset() {
@@ -64,6 +61,16 @@ public class EmploymentRequestViewModel {
         this.annualSalary.set(0.0d);
     }
     public Circle insertCircle(){
+        //make a sleep to wait for 1 second
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return new Circle(60, 40, 30, Color.GREEN);
+
     }
+
+
+    
 }
