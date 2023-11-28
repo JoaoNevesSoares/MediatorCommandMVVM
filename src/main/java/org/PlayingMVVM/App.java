@@ -16,7 +16,7 @@ public class App extends Application {
         ViewMain viewMain;
         try {
             viewMain = new ViewMain();
-            Scene scene = new Scene(viewMain.root, 640, 480);
+            Scene scene = new Scene(viewMain.root, 600, 480);
             stage.setScene(scene);
             stage.setTitle("Minha Aplicação");
             stage.show();
