@@ -34,14 +34,14 @@ public class ModelViewMain {
     @FXML
     private void handleAddBlack(){
 
-        Circle c = createCircle(40,Color.RED);
+        Circle c = createCircle(Color.RED);
         listaPreta.getChildren().add(c);
         System.out.println("Clicou Preto");
     }
     @FXML
     private void handleAddRed(){
 
-        Circle c = createCircle(40,Color.BLACK);
+        Circle c = createCircle(Color.BLACK);
         listaVermelha.getChildren().add(c);
         System.out.println("Clicou Vermelho");
     }
@@ -75,8 +75,8 @@ public class ModelViewMain {
             BntMoveDown.setDisable(true);
     }
 
-    private Circle createCircle(int radius, Color col){
+    private Circle createCircle(Color col){
 
-        return new Circle(radius,col);
+        return new Circle(40,col);
     }
 }

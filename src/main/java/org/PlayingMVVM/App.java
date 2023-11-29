@@ -11,8 +11,7 @@ import javafx.stage.Stage;
 public class App extends Application {
     @Override
     public void start(Stage stage){
-        
-        EmploymentRequestView view = new EmploymentRequestView();
+
         ViewMain viewMain;
         try {
             viewMain = new ViewMain();
@@ -22,7 +21,6 @@ public class App extends Application {
             stage.show();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
         }
     }
     public static void main(String[] args) {

@@ -9,10 +9,6 @@ public class ViewMain extends AnchorPane {
 
     public AnchorPane root = new AnchorPane();
 
-    public final ModelViewMain mv = new ModelViewMain();
-
-
-
     public ViewMain() throws IOException{
         createView();
     }
@@ -28,7 +24,7 @@ public class ViewMain extends AnchorPane {
         try {
             this.root.getChildren().add(loader.load());
         } catch (IOException e) {
-            e.printStackTrace();
+            //TODO
 
         }
 
