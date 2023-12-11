@@ -15,7 +15,7 @@ public class ViewMain extends AnchorPane {
     public void createView() throws IOException {
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/minhainterface.fxml"));
+        loader.setLocation(getClass().getResource("/interface2.fxml"));
 
         if (loader.getLocation() == null)  {
             throw new IOException("FXML file not found");
