@@ -1,6 +1,9 @@
 package org.PlayingMVVM;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -13,6 +16,8 @@ import javafx.util.Duration;
 public class ModelViewSecond {
 
 
+    @FXML
+    Button BtnResetTimer;
     @FXML
     Button BtnCreateProc;
 
@@ -28,10 +33,13 @@ public class ModelViewSecond {
     @FXML
     HBox listaVermelha;
 
+    private Relogio timer = new Relogio(0,0,0);
 
     private Boolean pause = false;
 
     PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
+
+    Timeline animation;
 
     private final Mediator mediator = new Mediator();
 
@@ -75,19 +83,12 @@ public class ModelViewSecond {
             return new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
-                    while(!pause){
-                        delay.setOnFinished(event -> {
-                            if(!pause){
-                                Model.run();
-                            }
-                            else{
-                                System.out.println("foi parado antes do tempo");
-                            }
-                        });
-                        delay.play();
-                    }
+
+                    animation = new Timeline(new KeyFrame(Duration.millis(500), e -> Model.run()));
+                    animation.setCycleCount(Animation.INDEFINITE); // loop forever
+                    animation.play();
                     return null;
-                }
+                };
             };
         }
     };
@@ -99,7 +100,11 @@ public class ModelViewSecond {
     }
     @FXML
     private void finishSim() {
-        pause = true;
+        animation.pause();
+    }
+    @FXML
+    private void resetTimer(){
+
     }
 
     private Circle createCircle(Color col) {
