@@ -11,10 +11,8 @@ public class Model {
     public static ArrayList<String> proceses = new ArrayList<>();
     public static ArrayList<String> running = new ArrayList<>();
 
-    public static void createProcess() {
-        int pid = (int) (Math.random() * 10);
-        proceses.add("proc - " + Integer.toString(pid));
-        System.out.println("Processo criado");
+    public static void createProcess(int processId) {
+        proceses.add("proc - " + Integer.toString(processId));
         mediator.publish(Mediator.ON_CREATE);
     }
 

@@ -7,13 +7,16 @@ import javafx.animation.Timeline;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Dialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
-public class ModelViewSecond {
+import java.util.Optional;
+
+public class ModelView {
 
 
     @FXML
@@ -44,16 +47,20 @@ public class ModelViewSecond {
     private final Mediator mediator = new Mediator();
 
 
-    public ModelViewSecond(){
+    public ModelView(){
         mediator.subscribe(Mediator.EVENT_UPDATE,this,this::update);
         mediator.subscribe(Mediator.ON_CREATE,this,this::createProcessCircle);
         mediator.subscribe(Mediator.ON_SCHEDULE,this,this::schedule);
     }
 
     @FXML
-    private void createProcess() {
-        Model.createProcess();
-        System.out.println("Clicou Preto");
+    private void createProcess() throws Exception {
+
+        Dialog<DialogReturnPOJO> createProcessDialog = new ProcessDialog();
+        Optional<DialogReturnPOJO> result = createProcessDialog.showAndWait();
+        result.ifPresent(dialogReturnPOJO -> {
+            Model.createProcess(dialogReturnPOJO.getPid());
+        });
     }
     private void createProcessCircle(String event){
         Color col = Color.color(Math.random(),Math.random(),Math.random());
