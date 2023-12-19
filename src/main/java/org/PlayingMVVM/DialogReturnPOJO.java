@@ -20,4 +20,5 @@ public class DialogReturnPOJO {
     public int getBurst() {
         return burst.get();
     }
+
 }

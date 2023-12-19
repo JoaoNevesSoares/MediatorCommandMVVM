@@ -36,11 +36,7 @@ public class ModelViewMain {
 
     PauseTransition delay = new PauseTransition(Duration.seconds(0.01));
 
-    private final Mediator mediator = new Mediator();
-
-
     public ModelViewMain(){
-        mediator.subscribe(Mediator.EVENT_UPDATE,this,this::update);
     }
 
     @FXML
@@ -66,7 +62,7 @@ public class ModelViewMain {
                     while(!pause){
                         delay.setOnFinished(event -> {
                             if(!pause){
-                                Model.run();
+                                VirtualMachine.run();
                             }
                             else{
                                 System.out.println("foi parado antes do tempo");

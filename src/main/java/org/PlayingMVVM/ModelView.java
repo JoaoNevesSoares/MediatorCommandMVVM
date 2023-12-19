@@ -36,6 +36,8 @@ public class ModelView {
     @FXML
     HBox listaVermelha;
 
+    HBox CircleProcesses;
+
     private Relogio timer = new Relogio(0,0,0);
 
     private Boolean pause = false;
@@ -44,33 +46,43 @@ public class ModelView {
 
     Timeline animation;
 
-    private final Mediator mediator = new Mediator();
+    public DialogReturnPOJO diagPOJO;
 
+    public ModelView() {
+        Mediator.getInstance().register(this,Mediator.Component.GUI);
+        Mediator.getInstance().register(new Kernel(),Mediator.Component.KERNEL);
 
-    public ModelView(){
-        mediator.subscribe(Mediator.EVENT_UPDATE,this,this::update);
-        mediator.subscribe(Mediator.ON_CREATE,this,this::createProcessCircle);
-        mediator.subscribe(Mediator.ON_SCHEDULE,this,this::schedule);
+        Mediator.getInstance().subscribe(Mediator.EVENT_UPDATE,this,this::update);
+        Mediator.getInstance().subscribe(Mediator.ON_CREATE,this,this::createProcessCircle);
+        Mediator.getInstance().subscribe(Mediator.ON_SCHEDULE,this,this::schedule);
+    }
+    public void addCircleToCreatedProcessList(Circle circle){
+        listaPreta.getChildren().add(circle);
     }
 
     @FXML
     private void createProcess() throws Exception {
-
+        Mediator.getInstance().send(this, Mediator.Action.CREATE_PROC);
+    }
+    public DialogReturnPOJO createProcessDialog(){
         Dialog<DialogReturnPOJO> createProcessDialog = new ProcessDialog();
         Optional<DialogReturnPOJO> result = createProcessDialog.showAndWait();
-        result.ifPresent(dialogReturnPOJO -> {
-            Model.createProcess(dialogReturnPOJO.getPid());
-        });
+        return result.orElse(null);
     }
+
     private void createProcessCircle(String event){
-        Color col = Color.color(Math.random(),Math.random(),Math.random());
-        Circle c = createCircle(col);
+        Circle c = createCircle();
         listaPreta.getChildren().add(c);
+    }
+
+    public void SuspendCircle(String event){
+        // find a way to retrieve a circle from Mediator
+
     }
 
     private void update(String event) {
 
-        Circle c = createCircle(Color.RED);
+        Circle c = createCircle();
         listaPreta.getChildren().add(c);
 
     }
@@ -91,7 +103,7 @@ public class ModelView {
                 @Override
                 protected Void call() throws Exception {
 
-                    animation = new Timeline(new KeyFrame(Duration.millis(500), e -> Model.run()));
+                    animation = new Timeline(new KeyFrame(Duration.millis(500), e -> VirtualMachine.run()));
                     animation.setCycleCount(Animation.INDEFINITE); // loop forever
                     animation.play();
                     return null;
@@ -111,11 +123,11 @@ public class ModelView {
     }
     @FXML
     private void resetTimer(){
-
+        Mediator.getInstance().send(this, Mediator.Action.VISUALIZAR);
     }
 
-    private Circle createCircle(Color col) {
-
+    public Circle createCircle() {
+        Color col = Color.color(Math.random(),Math.random(),Math.random());
         return new Circle(40,col);
     }
 }
