@@ -1,21 +1,35 @@
 package org.PlayingMVVM;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class Process {
     private int pid;
     private int burst;
-
     private int priority;
-
     private int arrivalTime;
 
-    private State state;
+    StringProperty processState = new SimpleStringProperty();
+    IntegerProperty processPid = new SimpleIntegerProperty();
+    IntegerProperty processBurst = new SimpleIntegerProperty();
+    IntegerProperty processPriority = new SimpleIntegerProperty();
+    IntegerProperty processArrival = new SimpleIntegerProperty();
 
-    Process(int pid, int burst, int priority, int arrivalTime, int arrivalInstant){
+    private State state;
+    Process(int pid, int burst, int priority, int arrivalTime, int arrivalInstant) {
         this.pid = pid;
         this.burst = burst;
         this.priority = priority;
         this.arrivalTime = arrivalTime;
+
         state = State.READY;
+        processPid.set(pid);
+        processBurst.set(burst);
+        processPriority.set(priority);
+        processArrival.set(arrivalTime);
+        processState.set(state.toString());
     }
     public void setPid(int pid) {
         this.pid = pid;
@@ -26,8 +40,8 @@ public class Process {
     }
     public void setState(State state){
         this.state = state;
+        setProcessState(state.toString());
     }
-
 
     public void suspend(){
         this.state = State.WAITING;
@@ -71,6 +85,66 @@ public class Process {
 
     public State getState() {
         return state;
+    }
+
+    public String getProcessState() {
+        return processState.get();
+    }
+
+    public StringProperty processStateProperty() {
+        return processState;
+    }
+
+    public void setProcessState(String processState) {
+        this.processState.set(processState);
+    }
+
+    public int getProcessPid() {
+        return processPid.get();
+    }
+
+    public IntegerProperty processPidProperty() {
+        return processPid;
+    }
+
+    public void setProcessPid(int processPid) {
+        this.processPid.set(processPid);
+    }
+
+    public int getProcessBurst() {
+        return processBurst.get();
+    }
+
+    public IntegerProperty processBurstProperty() {
+        return processBurst;
+    }
+
+    public void setProcessBurst(int processBurst) {
+        this.processBurst.set(processBurst);
+    }
+
+    public int getProcessPriority() {
+        return processPriority.get();
+    }
+
+    public IntegerProperty processPriorityProperty() {
+        return processPriority;
+    }
+
+    public void setProcessPriority(int processPriority) {
+        this.processPriority.set(processPriority);
+    }
+
+    public int getProcessArrival() {
+        return processArrival.get();
+    }
+
+    public IntegerProperty processArrivalProperty() {
+        return processArrival;
+    }
+
+    public void setProcessArrival(int processArrival) {
+        this.processArrival.set(processArrival);
     }
 
     public enum State {

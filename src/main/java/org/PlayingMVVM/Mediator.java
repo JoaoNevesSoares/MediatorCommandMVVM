@@ -1,9 +1,8 @@
 package org.PlayingMVVM;
 
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.application.Platform;
 import java.util.*;
-import java.util.function.Consumer;
 public class Mediator {
 
     public enum Component {
@@ -14,15 +13,12 @@ public class Mediator {
     public enum Action {
 
         CREATE_PROC,
-        KERNEL_NEW_PROCESS,
-        GET_PROC_LIST,
-        TEST,
         VISUALIZE,
         PROC_TO_EXECUTE,
         RUN,
-        ON_SCHEDULE,
         ON_THIS_PROCESS_DISPATCHED,
         ON_THIS_PROCESS_INTERRUPTED,
+        VIEW_PROCESS_INFO,
     }
     private final Map<Process, Circle> processCircleMap = new HashMap<>();
     private final Map<Circle, Process> circleProcessMap = new HashMap<>();
@@ -80,6 +76,12 @@ public class Mediator {
                 Circle circleToRemove = processCircleMap.get((Process) object);
                 modelView.removeProcessFromRunningList(circleToRemove);
                 modelView.addProcessToReadyList(circleToRemove);
+                break;
+            case VIEW_PROCESS_INFO:
+                Circle circle = (Circle) object;
+                Process process = circleProcessMap.get(circle);
+                Color col = (Color) circle.fillProperty().get();
+                modelView.showProcessInfo(process,col);
                 break;
         }
     }

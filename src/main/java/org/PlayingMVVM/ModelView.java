@@ -3,9 +3,13 @@ package org.PlayingMVVM;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
@@ -110,6 +114,17 @@ public class ModelView {
 
     public Circle createCircle() {
         Color col = Color.color(Math.random(),Math.random(),Math.random());
-        return new Circle(40,col);
+        Circle c = new Circle(40,col);
+        c.setOnMouseClicked((evt) -> {
+            Mediator.getInstance().send(c, Mediator.Action.VIEW_PROCESS_INFO);
+        });
+        return c;
+    }
+
+    public void showProcessInfo(Process process, Color col) {
+        // print colors
+        String t = RGBtoHEX.rgbToHex((int)(col.getRed()*250), (int)(col.getGreen()*250), (int)(col.getBlue()*250));
+        Dialog<ButtonType> processInfoDialog = new ProcessInfoDialog(process, t);
+        processInfoDialog.showAndWait();
     }
 }
