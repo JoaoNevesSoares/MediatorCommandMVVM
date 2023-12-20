@@ -16,15 +16,16 @@ public class Mediator {
         CREATE_PROC,
         KERNEL_NEW_PROCESS,
         GET_PROC_LIST,
-        TESTE,
-        VISUALIZAR,
+        TEST,
+        VISUALIZE,
+        PROC_TO_EXECUTE,
+        RUN,
+        ON_SCHEDULE,
+        ON_THIS_PROCESS_DISPATCHED,
+        ON_THIS_PROCESS_INTERRUPTED,
     }
-    public final static String EVENT_UPDATE = "update";
-    public final static String ON_CREATE = "create";
-    public final static String ON_SCHEDULE = "schedule";
-
-    private final Map<String, List<SubscriberObject>> subscribers = new LinkedHashMap<>();
     private final Map<Process, Circle> processCircleMap = new HashMap<>();
+    private final Map<Circle, Process> circleProcessMap = new HashMap<>();
     private static final Mediator instance = new Mediator();
     public static Mediator getInstance(){
         return instance;
@@ -32,6 +33,8 @@ public class Mediator {
 
     private Kernel kernel;
     private ModelView modelView;
+
+    private VirtualMachine vm;
 
     public void register(Object ob, Component component) {
         switch (component){
@@ -41,66 +44,48 @@ public class Mediator {
             case KERNEL:
                 kernel = (Kernel) ob;
                 break;
+            case VM:
+                vm = (VirtualMachine) ob;
+
         }
     }
-    public void send(Object object, Action action){
+    public void send(Object object, Action action) {
         switch (action){
-            case TESTE:
-                Circle c = processCircleMap.get(object);
-                break;
             case CREATE_PROC:
                 DialogReturnPOJO pojo = modelView.createProcessDialog();
+                if(pojo == null){
+                    return;
+                }
                 Circle newCircle = modelView.createCircle();
-                processCircleMap.put(kernel.createProcess(Process.Type.SIMPLE, pojo.getBurst(), 0, 0),newCircle);
-                modelView.addCircleToCreatedProcessList(newCircle);
+                Process newProcess = kernel.createProcess(Process.Type.SIMPLE, pojo.getBurst(), 0, 0);
+                processCircleMap.put(newProcess,newCircle);
+                circleProcessMap.put(newCircle, newProcess);
+                modelView.addProcessToReadyList(newCircle);
                 break;
-            case VISUALIZAR:
+            case VISUALIZE:
                 listAllProcessInfo();
+                break;
+            case PROC_TO_EXECUTE:
+                Process proc = kernel.requeueProcess();
+                ((VirtualMachine)object).setProcess(proc);
+                break;
+            case RUN:
+                vm.run();
+                break;
+            case ON_THIS_PROCESS_DISPATCHED:
+                Circle c = processCircleMap.get((Process) object);
+                modelView.addProcessToRunningList(c);
+                break;
+            case ON_THIS_PROCESS_INTERRUPTED:
+                Circle circleToRemove = processCircleMap.get((Process) object);
+                modelView.removeProcessFromRunningList(circleToRemove);
+                modelView.addProcessToReadyList(circleToRemove);
                 break;
         }
     }
-
-    public void publish(String event) {
-
-        Platform.runLater(() ->{
-            List<SubscriberObject> subscriberList = instance.subscribers.get(event);
-            if(subscriberList != null){
-                subscriberList.forEach(subscriberObject -> subscriberObject.getCb().accept(event));
-            }
-
-        });
-    }
-
-    private void listAllProcessInfo(){
+    private void listAllProcessInfo() {
         processCircleMap.forEach((process, circle) -> {
             System.out.println("Processo: " + process.getPid() + " Burst: " + process.getBurst());
         });
     }
-
-    public void subscribe(String event, Object subscriber, Consumer<String> cb) {
-        if (!instance.subscribers.containsKey(event)) {
-            List<SubscriberObject> slist = new ArrayList<>();
-            instance.subscribers.put(event,slist);
-        }
-        List<SubscriberObject> subscriberList = instance.subscribers.get(event);
-        subscriberList.add(new SubscriberObject(subscriber,cb));
-    }
-
-    static class SubscriberObject {
-
-        private final Object subscriber;
-        private final Consumer<String> cb;
-
-        public SubscriberObject(Object subscriber, Consumer<String> cb){
-            this.subscriber = subscriber;
-            this.cb = cb;
-        }
-        public Object getSubscriber(){
-            return subscriber;
-        }
-        public Consumer<String> getCb() {
-            return cb;
-        }
-    }
-
 }

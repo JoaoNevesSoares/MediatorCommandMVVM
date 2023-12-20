@@ -1,7 +1,10 @@
 package org.PlayingMVVM;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -26,7 +29,6 @@ public class ProcessDialog extends Dialog<DialogReturnPOJO>{
         getDialogPane().setContent(pane);
         // adding buttons to dialog pane
         getDialogPane().getButtonTypes().addAll(ButtonType.OK,ButtonType.CANCEL);
-
         setResultConverter(buttonType -> {
             if (buttonType == ButtonType.OK){
                 return new DialogReturnPOJO(pidSpinner.getValue(),burstSpinner.getValue());

@@ -2,7 +2,6 @@ package org.PlayingMVVM;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -23,41 +22,22 @@ public class ModelView {
     Button BtnResetTimer;
     @FXML
     Button BtnCreateProc;
-
     @FXML
     Button BtnStartSim;
-
     @FXML
     Button BtnFinishSim;
-
     @FXML
-    HBox listaPreta;
-
+    HBox readyProcesses;
     @FXML
-    HBox listaVermelha;
-
-    HBox CircleProcesses;
-
-    private Relogio timer = new Relogio(0,0,0);
-
-    private Boolean pause = false;
-
-    PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
-
+    HBox runningProcesses;
+    @FXML
+    HBox createdProcesses;
     Timeline animation;
-
-    public DialogReturnPOJO diagPOJO;
-
     public ModelView() {
-        Mediator.getInstance().register(this,Mediator.Component.GUI);
-        Mediator.getInstance().register(new Kernel(),Mediator.Component.KERNEL);
-
-        Mediator.getInstance().subscribe(Mediator.EVENT_UPDATE,this,this::update);
-        Mediator.getInstance().subscribe(Mediator.ON_CREATE,this,this::createProcessCircle);
-        Mediator.getInstance().subscribe(Mediator.ON_SCHEDULE,this,this::schedule);
+        Mediator.getInstance().register(this, Mediator.Component.GUI);
     }
     public void addCircleToCreatedProcessList(Circle circle){
-        listaPreta.getChildren().add(circle);
+        readyProcesses.getChildren().add(circle);
     }
 
     @FXML
@@ -69,31 +49,34 @@ public class ModelView {
         Optional<DialogReturnPOJO> result = createProcessDialog.showAndWait();
         return result.orElse(null);
     }
-
-    private void createProcessCircle(String event){
-        Circle c = createCircle();
-        listaPreta.getChildren().add(c);
-    }
-
-    public void SuspendCircle(String event){
-        // find a way to retrieve a circle from Mediator
-
-    }
-
-    private void update(String event) {
-
-        Circle c = createCircle();
-        listaPreta.getChildren().add(c);
-
-    }
-    private void schedule(String event){
-        if(listaVermelha.getChildren().isEmpty()){
-            listaVermelha.getChildren().add((listaPreta.getChildren().remove(0)));
+    public void schedule(){
+        if(runningProcesses.getChildren().isEmpty()){
+            runningProcesses.getChildren().add((readyProcesses.getChildren().remove(0)));
         }
         else{
-            listaPreta.getChildren().add(listaVermelha.getChildren().remove(0));
-            listaVermelha.getChildren().add((listaPreta.getChildren().remove(0)));
+            readyProcesses.getChildren().add(runningProcesses.getChildren().remove(0));
+            runningProcesses.getChildren().add((readyProcesses.getChildren().remove(0)));
         }
+    }
+    public void removeProcessFromRunningList(Circle circleToRemove){
+        // check if circleToRemove is in runningProcesses
+        if(!runningProcesses.getChildren().contains(circleToRemove)){
+            throw new IllegalStateException("Circle to remove must be in runningProcesses");
+        }
+        runningProcesses.getChildren().remove(circleToRemove);
+    }
+    public void removeProcessFromReadyList(Circle circleToRemove){
+        // check if circleToRemove is in readyProcesses
+        if(!readyProcesses.getChildren().contains(circleToRemove)){
+            throw new IllegalStateException("Circle to remove must be in readyProcesses");
+        }
+        readyProcesses.getChildren().remove(circleToRemove);
+    }
+    public void addProcessToRunningList(Circle circle){
+        runningProcesses.getChildren().add(circle);
+    }
+    public void addProcessToReadyList(Circle circle){
+        readyProcesses.getChildren().add(circle);
     }
 
     private final Service<Void> createCircleCommand = new Service<Void>() {
@@ -103,7 +86,7 @@ public class ModelView {
                 @Override
                 protected Void call() throws Exception {
 
-                    animation = new Timeline(new KeyFrame(Duration.millis(500), e -> VirtualMachine.run()));
+                    animation = new Timeline(new KeyFrame(Duration.millis(500), e -> Mediator.getInstance().send(this, Mediator.Action.RUN)));
                     animation.setCycleCount(Animation.INDEFINITE); // loop forever
                     animation.play();
                     return null;
@@ -114,7 +97,6 @@ public class ModelView {
 
     @FXML
     private void startSim() {
-        pause = false;
         createCircleCommand.restart();
     }
     @FXML
@@ -123,7 +105,7 @@ public class ModelView {
     }
     @FXML
     private void resetTimer(){
-        Mediator.getInstance().send(this, Mediator.Action.VISUALIZAR);
+        Mediator.getInstance().send(this, Mediator.Action.VISUALIZE);
     }
 
     public Circle createCircle() {

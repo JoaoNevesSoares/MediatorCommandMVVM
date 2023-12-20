@@ -15,10 +15,7 @@ public class Process {
         this.burst = burst;
         this.priority = priority;
         this.arrivalTime = arrivalTime;
-    }
-    public void created(){
-        setState(State.NEW);
-        Mediator.getInstance().send(this, Mediator.Action.TESTE);
+        state = State.READY;
     }
     public void setPid(int pid) {
         this.pid = pid;
@@ -32,10 +29,28 @@ public class Process {
     }
 
 
-    public void Suspend(){
+    public void suspend(){
         this.state = State.WAITING;
         //launch a callback in the Mediator passing this process to update and
         // redirect it to Modelview to change Circle related to this process to Other HBox
+    }
+    public void dispatch(){
+        if(getState() != State.READY){
+            throw new IllegalStateException("Process must be in READY state to be dispatched");
+        }
+        else{
+            setState(State.RUNNING);
+            Mediator.getInstance().send(this, Mediator.Action.ON_THIS_PROCESS_DISPATCHED);
+        }
+    }
+    public void interrupt(){
+        if(getState() != State.RUNNING){
+            throw new IllegalStateException("Process must be in RUNNING state to be interrupted");
+        }
+        else{
+            setState(State.READY);
+            Mediator.getInstance().send(this, Mediator.Action.ON_THIS_PROCESS_INTERRUPTED);
+        }
     }
 
     public int getPid() {

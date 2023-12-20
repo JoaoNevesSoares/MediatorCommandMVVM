@@ -11,8 +11,9 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.PlayingMVVM.ModelView">
     <VBox prefHeight="298.0" prefWidth="600.0">
-        <HBox fx:id="listaVermelha" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: RED;" />
-        <HBox fx:id="listaPreta" nodeOrientation="RIGHT_TO_LEFT" prefHeight="100.0" prefWidth="508.0" style="-fx-background-color: GREY;" />
+        <HBox fx:id="runningProcesses" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: RED;" />
+        <HBox fx:id="readyProcesses" nodeOrientation="RIGHT_TO_LEFT" prefHeight="100.0" prefWidth="508.0" style="-fx-background-color: GREY;" />
+        <HBox fx:id="createdProcesses" nodeOrientation="RIGHT_TO_LEFT" prefHeight="100.0" prefWidth="508.0" style="-fx-background-color: BLACK;" />
         <ButtonBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: BLUE;">
             <buttons>
                 <Button fx:id="BtnResetTimer" mnemonicParsing="false" onAction="#resetTimer" text="resetar relógio">
@@ -38,9 +39,4 @@
             </buttons>
         </ButtonBar>
     </VBox>
-   <Label layoutX="252.0" layoutY="280.0" prefHeight="37.0" prefWidth="63.0" text="timer" textAlignment="CENTER">
-      <font>
-         <Font size="18.0" />
-      </font>
-   </Label>
 </AnchorPane>

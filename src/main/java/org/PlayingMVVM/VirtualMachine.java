@@ -4,23 +4,30 @@ import java.util.ArrayList;
 
 public class VirtualMachine {
 
-    private static final Mediator  mediator = new Mediator();
     static int timeSlice = 0 ;
     public static ArrayList<Process> running = new ArrayList<>();
 
-    public static void run() {
+    private Process process;
 
-        ArrayList<Process> processes = new ArrayList<>();
+    public void setProcess(Process process) {
+        this.process = process;
+    }
+
+    public void run() {
+
         if(running.isEmpty()){
-            running.add(processes.get(0));
-            mediator.publish(Mediator.ON_SCHEDULE);
+            Mediator.getInstance().send(this, Mediator.Action.PROC_TO_EXECUTE);
+            process.dispatch();
+            running.add(process);
         }
         else{
             if(timeSlice > 2){
-                processes.add(running.remove(0));
-                running.add(processes.get(0));
+                Process p = running.remove(0);
+                p.interrupt();
+                Mediator.getInstance().send(this, Mediator.Action.PROC_TO_EXECUTE);
+                process.dispatch();
+                running.add(process);
                 timeSlice = 0;
-                mediator.publish(Mediator.ON_SCHEDULE);
             }
             else{
                 timeSlice += 1;
