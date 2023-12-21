@@ -1,12 +1,13 @@
 package org.PlayingMVVM;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 
 public class ProcessInfoDialog extends Dialog<ButtonType> {
@@ -24,14 +25,30 @@ public class ProcessInfoDialog extends Dialog<ButtonType> {
 
     Process proc;
     String color;
-public ProcessInfoDialog(Process proc, String color) {
+    public ProcessInfoDialog(Process proc, String color) {
         super();
         this.proc = proc;
         this.color = color;
         this.setTitle("Process Info");
         this.initModality(Modality.NONE);
-        buildUI();
-        setPropertybinding();
+        FXMLLoader loaderDialog = new FXMLLoader(getClass().getResource("/InfoProcessDialog.fxml"));
+        DialogPane dialogPane = null;
+        ProcessInfoDialogController infoController = null;
+        try {
+            dialogPane = loaderDialog.load();
+            infoController = loaderDialog.getController();
+
+        } catch (Exception e) {
+            System.out.println("oi");
+        }
+        assert infoController != null;
+        assert dialogPane != null;
+        String style = "-fx-background-color: " + this.color + ";";
+        dialogPane.setStyle(style);
+        infoController.setProcess(proc);
+        this.setDialogPane(dialogPane);
+        //buildUI();
+        //setPropertybinding();
     }
     private void buildUI() {
         processState = new Label();
