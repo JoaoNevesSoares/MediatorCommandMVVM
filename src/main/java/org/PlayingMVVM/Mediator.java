@@ -1,5 +1,8 @@
 package org.PlayingMVVM;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.control.ButtonType;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import java.util.*;
@@ -48,15 +51,19 @@ public class Mediator {
     public void send(Object object, Action action) {
         switch (action){
             case CREATE_PROC:
-                DialogReturnPOJO pojo = modelView.createProcessDialog();
-                if(pojo == null){
-                    return;
+                CreateProcessDialog createProcessDialog = new CreateProcessDialog();
+                IntegerProperty burst = new SimpleIntegerProperty();
+                burst.bind(createProcessDialog.burstProperty());
+                Optional<ButtonType> result = createProcessDialog.showAndWait();
+                if(result.isPresent() && result.get() == ButtonType.OK){
+                    System.out.println("Process created");
+                    System.out.println("Burst: " + burst.get());
+                    Circle newCircle = modelView.createCircle();
+                    Process newProcess = kernel.createProcess(Process.Type.SIMPLE, burst.get(), 0, 0);
+                    processCircleMap.put(newProcess,newCircle);
+                    circleProcessMap.put(newCircle, newProcess);
+                    modelView.addProcessToReadyList(newCircle);
                 }
-                Circle newCircle = modelView.createCircle();
-                Process newProcess = kernel.createProcess(Process.Type.SIMPLE, pojo.getBurst(), 0, 0);
-                processCircleMap.put(newProcess,newCircle);
-                circleProcessMap.put(newCircle, newProcess);
-                modelView.addProcessToReadyList(newCircle);
                 break;
             case VISUALIZE:
                 listAllProcessInfo();

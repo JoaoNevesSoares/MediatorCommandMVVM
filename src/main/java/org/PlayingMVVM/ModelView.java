@@ -3,9 +3,6 @@ package org.PlayingMVVM;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -20,7 +17,6 @@ import javafx.util.Duration;
 import java.util.Optional;
 
 public class ModelView {
-
 
     @FXML
     Button BtnResetTimer;
@@ -47,11 +43,6 @@ public class ModelView {
     @FXML
     private void createProcess() throws Exception {
         Mediator.getInstance().send(this, Mediator.Action.CREATE_PROC);
-    }
-    public DialogReturnPOJO createProcessDialog(){
-        Dialog<DialogReturnPOJO> createProcessDialog = new ProcessDialog();
-        Optional<DialogReturnPOJO> result = createProcessDialog.showAndWait();
-        return result.orElse(null);
     }
     public void schedule(){
         if(runningProcesses.getChildren().isEmpty()){

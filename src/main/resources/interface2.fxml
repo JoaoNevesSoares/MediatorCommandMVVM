@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.PlayingMVVM.ModelView">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml" fx:controller="org.PlayingMVVM.ModelView">
     <VBox prefHeight="298.0" prefWidth="600.0">
         <HBox fx:id="runningProcesses" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: RED;" />
         <HBox fx:id="readyProcesses" nodeOrientation="RIGHT_TO_LEFT" prefHeight="100.0" prefWidth="508.0" style="-fx-background-color: GREY;" />
